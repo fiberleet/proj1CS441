@@ -4,7 +4,7 @@
 struct Table_Entry
 {
     unsigned int  current_state_id;
-    unsigned char transition_letter;
+    unsigned int transition_id;
     unsigned int  next_state_id;
 };
 
