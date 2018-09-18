@@ -1,44 +1,85 @@
 #ifndef TABLE_H
 #define TABLE_H
 
-struct Table_Entry
+struct tableEntry
 {
-    unsigned int  current_state_id;
-    unsigned char transition_letter;
-    unsigned int  next_state_id;
+    int  alphaID;
+    int  numberID;
+    int  specialSymbolID;
+    int  greaterID;
+    int  equalID;
+    int  rParenthesisID;
+    int  asteriskID;
+    int  lessID;
+    int  colonID;
+    int  lParenthesisID;
+    int  periodID;
+    int  singleQuoteID;
+    int  whiteSpaceID;
+    int  unrecognizedCharID;
 };
 
 Table_Entry const *    table_begin(void);
+Table_Entry const *    table_query(int state);
 Table_Entry const *    table_end(void);
 
 #endif // TABLE_H
-#define reservedWord 1
-#define reservedWordF 2 //F stands for Finished
-#define specialSymbolF 3
-#define greater 4
-#define greaterFinished 5
-#define greaterLessEqualF 6
-#define less 7
-#define lessF 8
-#define nonEqualityF 9
-#define colon 10
-#define colonF 11
-#define assignmentFinished 12
-#define equalParenthesisAsteriskF 13
-#define period 14
-#define periodF 15
-#define setRangeF 16
-#define integerOrFloat 17
-#define integerF 18
-#define float 19
-#define mantissa 20
-#define floatF 21
-#define followingDigitExpected 22
-#define beginString 23
-#define str 24
-#define foundQuoteInString 25
-#define doubleQuoteInString 26
-#define stringFinished 27
 
-#define endState 100
-#define error 101
+
+//Constants to represent the states
+const int fsReservedWord = 1;
+const int fsReservedWordf = 2;
+const int fsSpecialSymbolF = 3;
+const int fsGreater = 4;
+const int fsGreaterF = 5;
+const int fsLess = 6;
+const int fsLessF = 7;
+const int fsGreaterLessEqualF = 8;
+const int fsNonEqualityF = 9;
+const int fsColon = 10;
+const int fsColonF = 11;
+const int fsAssignmentF = 12;
+const int fsEqualRParenthesisAsteriskF = 13;
+const int fsPeriod = 14;
+const int fsPeriodF = 15;
+const int fsSetRangeF = 16;
+const int fsIntegerOrFloat = 17;
+const int fsIntegerF = 18;
+const int fsFlo = 19;
+const int fsMantissa = 20;
+const int fsFloF = 21;
+const int fsFDE = 22; //Following Digit Expected
+const int fsBeginString = 23;
+const int fsString = 24;
+const int fsFoundQuoteInString = 25;
+const int fsDoubleQuoteInString = 26;
+const int fsStringF = 27;
+const int fsLParenthesis = 28;
+const int fsLParenthesisF = 29;
+const int fsInComment =30;
+const int fsCmStar = 31;
+const int fsCommentF = 32;
+
+
+const int fsBeginState = 0;
+const int fsEndState = 100;
+const int fsErrorState = 101;
+
+
+//FSA character categories
+const int ccAlpha = 0;
+const int ccNumber = 1;
+const int ccSpecialSymbol = 3;
+const int ccGreater = 4;
+const int ccEqual = 5;
+const int ccRParenthesis = 6;
+const int ccAsterisk = 7;
+const int ccLess = 8;
+const int ccColon = 9;
+const int ccLeftParenthesis = 10;
+const int ccPeriod = 11;
+const int ccSingleQuote = 12;
+const int ccWhiteSpace = 13;
+const int ccUnrecognizedChar = 14;
+const int ccEndLine = 15;
+const int ccEndOfFile = 16;

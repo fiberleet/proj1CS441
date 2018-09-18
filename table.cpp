@@ -1,64 +1,40 @@
 #include "table.h"
-//Constants to represent the states
-const int fsReservedWord = 1;
-const int fsReservedWordf = 2;
-const int fsSpecialSymbolF = 3;
-const int fsGreater = 4;
-const int fsGreaterF = 5;
-const int fsLess = 6;
-const int fsGreaterLessEqualF = 7;
-const int fsNonEqualityF = 8;
-const int fsColon = 9;
-const int fsColonF = 10;
-const int fsAssignmentF = 11;
-const int fsEqualRParenthesisAsteriskF = 12;
-const int fsPeriod = 13;
-const int fsPeriodF = 14;
-const int fsSetRangeF = 15;
-const int fsIntegerOrFloat = 16;
-const int fsIntegerF = 17;
-const int fsFlo = 18;
-const int fsMantissa = 19;
-const int fsFloF = 20;
-const int fsFollowingDigitExpected = 21;
-const int fsBeginString = 22;
-const int fsString = 23;
-const int fsFoundQuoteInString = 24;
-const int fsDoubleQuoteInString = 25;
-const int fsStringF = 26;
-const int fsLParenthesis = 27;
-const int fsInComment = 28;
-const int fsCmStar = 29
-const int fsCommentF = 30;
-const int fsWhiteSpace = 31;
-const int fsUnrecognizedChar = 32;
-const int fsEndOfFileChar = 33;
-
-
-const int fsbeginState = 0;
-const int fsendState = 101;
-const int fserrorState = 102;
-
-//FSA character categories
-const int ccAlpha = 0;
-const int ccNumber = 1;
-const int ccSpecialSymbol = 3;
-const int ccGreater = 4;
-const int ccEqual = 5;
-const int ccLess = 6;
-const int ccColon = 7;
-const int ccLeftParenthesis = 8;
-const int ccRightParenthesis = 9;
-const int ccAsterisk = 10;
-const int ccPeriod = 11;
-const int ccSingleQuote = 12;
-const int ccOther = 13;
 
 
 static const tableEntry    fsaTable[] =
 {
-    //              Alpha              Number                SpecialSymbol      Greater     Equal                         Less       Colon, LeftParenthesis, Period, SingleQuote, Other 
-   /*beginState*/ { fsReservedWord,    fsIntegerOrFloat  ,   fsSpecialSymbolF,  fsGreater, fsEqualRParenthesisAsteriskF,  fsLess,   fsColon, fsLParenthesis, },
+    //                               Alpha           Number            SpecialSymbol     Greater          Equal                          RParenthesis                  Asterisk                      Less             Colon            LeftParenthesis  Period           SingleQuote      WhiteSpace       UnrecognizedChar
+    /*beginState*/                 { fsReservedWord, fsIntegerOrFloat, fsSpecialSymbolF, fsGreater,       fsEqualRParenthesisAsteriskF,  fsEqualRParenthesisAsteriskF, fsEqualRParenthesisAsteriskF, fsLess,          fsColon,         fsLParenthesis,  fsPeriod,        fsBeginString,   fsBeginState,    fsErrorState    },
+    /*ReservedWord*/               { fsReservedWord, fsReservedWord,   fsReservedWordf,  fsReservedWordf, fsReservedWordf,               fsReservedWordf,              fsReservedWordf,              fsReservedWordf, fsReservedWordf, fsReservedWordf, fsReservedWordf, fsReservedWordf, fsReservedWordf, fsReservedWordf },
+	/*ReservedWordf*/              { fsEndState,     fsEndState,       fsEndState,       fsEndState,      fsEndState,                    fsEndState,                   fsEndState,                   fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState      },
+	/*SpecialSymbolf*/             { fsEndState,     fsEndState,       fsEndState,       fsEndState,      fsEndState,                    fsEndState,                   fsEndState,                   fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState      },
+	/*Greater*/                    { fsGreaterF,     fsGreaterF,       fsGreaterF,       fsGreaterF,      fsGreaterLessEqualF,           fsGreaterF,                   fsGreaterF,                   fsGreaterF,      fsGreaterF,      fsGreaterF,      fsGreaterF,      fsGreaterF,      fsGreaterF,      fsGreaterF      },
+	/*Greaterf*/                   { fsEndState,     fsEndState,       fsEndState,       fsEndState,      fsEndState,                    fsEndState,                   fsEndState,                   fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState      },
+	/*GreaterLessEqualf*/          { fsEndState,     fsEndState,       fsEndState,       fsEndState,      fsEndState,                    fsEndState,                   fsEndState,                   fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState      },
+	/*NonEqualityf*/               { fsEndState,     fsEndState,       fsEndState,       fsEndState,      fsEndState,                    fsEndState,                   fsEndState,                   fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState      },
+	/*Less*/                       { fsLessF,        fsLessF,          fsLessF,          fsNonEqualityF,  fsGreaterLessEqualF,           fsLessF,                      fsLessF,                      fsLessF,         fsLessF,         fsLessF,         fsLessF,         fsLessF,         fsLessF,         fsLessF         },
+	/*LessF*/                      { fsEndState,     fsEndState,       fsEndState,       fsEndState,      fsEndState,                    fsEndState,                   fsEndState,                   fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState      },	
+	/*Colon*/                      { fsColonF,       fsColonF,         fsColonF,         fsColonF,        fsAssignmentF,                 fsColonF,                     fsColonF,                     fsColonF,        fsColonF,        fsColonF,        fsColonF,        fsColonF,        fsColongF,       fsColonF        },
+	/*ColonF*/                     { fsEndState,     fsEndState,       fsEndState,       fsEndState,      fsEndState,                    fsEndState,                   fsEndState,                   fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState      },
+	/*AssignmentF*/                { fsEndState,     fsEndState,       fsEndState,       fsEndState,      fsEndState,                    fsEndState,                   fsEndState,                   fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState      },
+	/*EqualRParenthesisAsteriskF*/ { fsEndState,     fsEndState,       fsEndState,       fsEndState,      fsEndState,                    fsEndState,                   fsEndState,                   fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState      },
+	/*Period*/                     { fsPeriodF,      fsPeriodF,        fsPeriodF,        fsPeriodF,       fsPeriodF,                     fsPeriodF,                    fsPeriodF,                    fsPeriodF,       fsPeriodF,       fsPeriodF,       fsSetRangeF,     fsPeriodF,       fsPeriodF,       fsPeriodF       },
+	/*Periodf*/                    { fsEndState,     fsEndState,       fsEndState,       fsEndState,      fsEndState,                    fsEndState,                   fsEndState,                   fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState      },
+	/*SetRangef*/                  { fsEndState,     fsEndState,       fsEndState,       fsEndState,      fsEndState,                    fsEndState,                   fsEndState,                   fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState      },
+	/*IntegerOrFloat*/             { fsIntegerF,     fsIntegerOrFloat, fsIntegerF,       fsIntegerF,      fsIntegerF,                    fsIntegerF,                   fsIntegerF,                   fsIntegerF,      fsIntegerF,      fsIntegerF,      fsFlo,           fsIntegerF,      fsIntegerF,      fsIntegerF      },
+	/*IntegerF*/                   { fsEndState,     fsEndState,       fsEndState,       fsEndState,      fsEndState,                    fsEndState,                   fsEndState,                   fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState      },
+	/*Flo*/                        { fsFDE,          fsMantissa,       fsFDE,            fsFDE,           fsFDE,                         fsFDE,                        fsFDE,                        fsFDE,           fsFDE,           fsFDE,           fsFDE,           fsFDE,           fsFDE,           fsFDE           },
+	/*FollowingDigitExpected*/     { fsErrorState,   fsErrorState,     fsErrorState,     fsErrorState,    fsErrorState,                  fsErrorState,                 fsErrorState,                 fsErrorState,    fsErrorState,    fsErrorState,    fsErrorState,    fsErrorState,    fsErrorState,    fsErrorState    },
+	/*BeginString*/                { fsString,       fsString,         fsString,         fsString,        fsString,                      fsString,                     fsString,                     fsString,        fsString,        fsString,        fsString,        fsStringF,       fsString,        fsString        },
+	/*String*/                     { fsString,       fsString,         fsString,         fsString,        fsString,                      fsString,                     fsString,                     fsString,        fsString,        fsString,        fsString,   fsFoundQuoteInString, fsString,        fsString        },
+	/*FoundQuoteInString*/         { fsStringF,      fsStringF,        fsStringF,        fsStringF,       fsStringF,                     fsStringF,                    fsStringF,                    fsStringF,       fsStringF,       fsStringF,       fsStringF, fsDoubleQuoteInString, fsStringF,       fsStringF       },
+	/*DoubleQuoteInString*/        { fsString,       fsString,         fsString,         fsString,        fsString,                      fsString,                     fsString,                     fsString,        fsString,        fsString,        fsString,   fsFoundQuoteInString, fsString,        fsString        },
+	/*StringF*/                    { fsEndState,     fsEndState,       fsEndState,       fsEndState,      fsEndState,                    fsEndState,                   fsEndState,                   fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState      },
+	/*LParenthesis*/               { fsLParenthesisF,fsLParenthesisF,  fsLParenthesisF,  fsLParenthesisF, fsLParenthesisF,               fsLParenthesisF,              fsInComment,                  fsLParenthesisF, fsLParenthesisF, fsLParenthesisF, fsLParenthesisF, fsLParenthesisF, fsLParenthesisF, fsLParenthesisF },
+	/*LParenthesisf*/              { fsEndState,     fsEndState,       fsEndState,       fsEndState,      fsEndState,                    fsEndState,                   fsEndState,                   fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState      },
+    /*InComment*/                  { fsInComment,    fsInComment,      fsInComment,      fsInComment,     fsInComment,                   fsInComment,                  fsCmStar,                     fsInComment,     fsInComment,     fsInComment,     fsInComment,     fsInComment,     fsInComment,     fsInComment     },
+    /*CmStar*/                     { fsInComment,    fsInComment,      fsInComment       fsInComment,     fsInComment,                   fsCommentF,                   fsCmStar,                     fsInComment,     fsInComment,     fsInComment,     fsInComment,     fsInComment,     fsInComment,     fsInComment     },
+    /*CommentF*/                   { fsEndState,     fsEndState,       fsEndState,       fsEndState,      fsEndState,                    fsEndState,                   fsEndState,                   fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState,      fsEndState      },
 };
 
 static const unsigned int  TABLE_SIZE =  
@@ -69,6 +45,15 @@ Table_Entry const *
 table_begin(void)
 {
     return &my_table[0];
+}
+
+Table_Entry const *
+table_query(int state)
+{
+	if(state <= TABLE_SIZE){
+		return &my_table[state];
+	}
+	else return -1;
 }
 
 
